@@ -26,7 +26,7 @@ app.get("/", async (req, res) => {
     userId: "me",
   });
   async function getUnrepliesMessages(auth) {
-    console.log("function getUnrepliesMessages got hitted  ");
+    console.log("getUnrepliesMessages executed");
     const gmail = google.gmail({ version: "v1", auth });
     const response = await gmail.users.messages.list({
       userId: "me",
@@ -49,7 +49,7 @@ app.get("/", async (req, res) => {
   }
 
   async function createLabel(auth) {
-    console.log("function createlabel got hitted  ");
+    console.log("createlabel executed");
 
     const gmail = google.gmail({ version: "v1", auth });
     try {
@@ -78,7 +78,7 @@ app.get("/", async (req, res) => {
   }
 
   async function sendReply(auth, message) {
-    console.log("function sendReply got hitted  ");
+    console.log("sendReply executed ");
 
     const gmail = google.gmail({ version: "v1", auth });
     const res = await gmail.users.messages.get({
@@ -120,17 +120,17 @@ app.get("/", async (req, res) => {
 
   async function main() {
     const labelId = await createLabel(auth);
-    console.log(`Label has been created  ${labelId}`);
+    console.log(`Label created  ${labelId}`);
     setInterval(async () => {
       const messages = await getUnrepliesMessages(auth);
-      console.log(`found ${messages.length} unreplied messages`);
+      console.log(`Found ${messages.length} unreplied messages`);
 
       for (const message of messages) {
         await sendReply(auth, message);
-        console.log(`sent reply to message with id ${message.id}`);
+        console.log(`Sent reply to message, id ${message.id}`);
 
         await addLabel(auth, message, labelId);
-        console.log(`Added label to message with id ${message.id}`);
+        console.log(`Added label to message, id ${message.id}`);
       }
     }, Math.floor(Math.random() * (120 - 45 + 1) + 45) * 1000); // Random interval between 45 and 120 seconds
   }
